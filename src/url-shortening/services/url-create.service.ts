@@ -4,16 +4,30 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UrlEntity } from '../url.entity';
 import { UrlDto } from '../dto/url.dto';
+import { AuthEntity } from 'src/auth/auth.entity';
 
 @Injectable()
 export class UrlCreateService {
   constructor(
     @InjectRepository(UrlEntity)
     private urlRepository: Repository<UrlEntity>,
+    @InjectRepository(AuthEntity)
+    private authRepository: Repository<AuthEntity>,
   ) {}
 
   async shortUrl(urlData: UrlDto): Promise<string> {
-    const { longUrl, username } = urlData;
+    const { longUrl, userId } = urlData;
+
+    const userData = await this.authRepository.findOne({ where: { username: userId } });
+    if(!userData){
+      throw new Error('User not found');
+    }
+
+    const existingLongUrl = await this.urlRepository.findOne({ where: { longUrl } });
+    if(existingLongUrl){
+      return `http://localhost:3000/url/${existingLongUrl.shortUrl}`;
+    }
+
     let hash = crypto.createHash('sha256').update(longUrl).digest('hex');
     let shortUrl = hash.substring(0, 8);
 
@@ -22,12 +36,13 @@ export class UrlCreateService {
       hash = crypto.createHash('sha256').update(longUrl).digest('hex');
       shortUrl = hash.substring(0, 8);
       existingUrl = await this.urlRepository.findOne({ where: { shortUrl } });
+      console.log("Existing URL:", existingUrl);
     }
-
+    
     const updatedUrlData = {
       longUrl,
       shortUrl,
-      username,
+      user: userData
     };
 
     const newUrlData = this.urlRepository.create(updatedUrlData);

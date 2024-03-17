@@ -5,10 +5,12 @@ import { UrlController } from "./url.controller";
 import { UrlCreateService } from "./services/url-create.service";
 import { UrlLookupService } from "./services/url-fetch.service";
 import { ScheduleModule } from '@nestjs/schedule';
+import { AuthEntity } from "src/auth/auth.entity";
+import { AnalyticsEntity } from "src/analytics/analytics.entity";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([UrlEntity]), // Import and provide the AuthEntity to TypeOrmModule
+        TypeOrmModule.forFeature([UrlEntity, AuthEntity, AnalyticsEntity]), // Import and provide the AuthEntity to TypeOrmModule
         ScheduleModule,
     ],
     controllers: [UrlController],
