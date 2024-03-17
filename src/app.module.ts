@@ -7,10 +7,13 @@ import typeorm from './config/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UrlModule } from './url-shortening/url.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 
 @Module({
   imports: [
     AuthModule,
+    AnalyticsModule,
     ScheduleModule.forRoot(),
     UrlModule,
     ConfigModule.forRoot({

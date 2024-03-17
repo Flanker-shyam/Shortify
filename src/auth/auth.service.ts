@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryFailedError } from 'typeorm';
 import { AuthEntity } from './auth.entity';
-import { RegisterDto, LoginDto } from './auth.dto';
+import { RegisterDto, LoginDto, LoginResponseDto } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
@@ -50,29 +50,33 @@ export class AuthService {
 
   async loginUser(
     userData: LoginDto,
-  ): Promise<{ user: AuthEntity; token: string } | string> {
-    const userDataObject = plainToClass(LoginDto, userData);
-    const errors = await validate(userDataObject);
+  ): Promise<LoginResponseDto | string | { error: string }> {
+    try {
+      const userDataObject = plainToClass(LoginDto, userData);
+      const errors = await validate(userDataObject);
 
-    if (errors.length > 0) {
-      const errorMessages = errors
-        .map((error) => Object.values(error.constraints))
-        .join('; ');
-      throw new BadRequestException(errorMessages);
-    }
-
-    const user = await this.authEntityRepository.findOne({
-      where: { username: userData.username },
-    });
-    if (user) {
-      if (user.password === userData.password) {
-        const token = await this.generateToken(user);
-        return { user, token };
-      } else {
-        return 'Password is incorrect';
+      if (errors.length > 0) {
+        const errorMessages = errors
+          .map((error) => Object.values(error.constraints))
+          .join('; ');
+        throw new BadRequestException(errorMessages);
       }
-    } else {
-      return 'User not found';
+
+      const user = await this.authEntityRepository.findOne({
+        where: { username: userData.username },
+      });
+      if (user) {
+        if (user.password === userData.password) {
+          const token = await this.generateToken(user);
+          return { user, token };
+        } else {
+          return 'Password is incorrect';
+        }
+      } else {
+        return 'User not found';
+      }
+    } catch (err) {
+      return { error: err.message };
     }
   }
 }

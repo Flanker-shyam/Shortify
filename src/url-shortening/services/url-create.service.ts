@@ -3,8 +3,10 @@ import * as crypto from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UrlEntity } from '../url.entity';
-import { UrlDto } from '../dto/url.dto';
+import { UrlDto } from '../dto/url-request.dto';
 import { AuthEntity } from 'src/auth/auth.entity';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class UrlCreateService {
@@ -15,50 +17,63 @@ export class UrlCreateService {
     private authRepository: Repository<AuthEntity>,
   ) {}
 
-  async shortUrl(urlData: UrlDto): Promise<string> {
-    const { longUrl, userId } = urlData;
+  async shortUrl(urlData: UrlDto): Promise<string | { error: string }> {
+    try {
+      const { longUrl, userId } = urlData;
+      const userData = await this.authRepository.findOne({
+        where: { username: userId },
+      });
+      if (!userData) {
+        throw new Error('User not found');
+      }
 
-    const userData = await this.authRepository.findOne({ where: { username: userId } });
-    if(!userData){
-      throw new Error('User not found');
+      const existingLongUrl = await this.urlRepository.findOne({
+        where: { longUrl },
+      });
+      if (existingLongUrl) {
+        return `${process.env.BASE_URL}/url/${existingLongUrl.shortUrl}`;
+      }
+
+      let hash = crypto.createHash('sha256').update(longUrl).digest('hex');
+      let shortUrl = hash.substring(0, 8);
+
+      let existingUrl = await this.urlRepository.findOne({
+        where: { shortUrl },
+      });
+      while (existingUrl) {
+        hash = crypto.createHash('sha256').update(longUrl).digest('hex');
+        shortUrl = hash.substring(0, 8);
+        existingUrl = await this.urlRepository.findOne({ where: { shortUrl } });
+        console.log('Existing URL:', existingUrl);
+      }
+
+      const updatedUrlData = {
+        longUrl,
+        shortUrl,
+        user: userData,
+      };
+
+      const newUrlData = this.urlRepository.create(updatedUrlData);
+      await this.urlRepository.save(newUrlData);
+      const updatedUrl = `${process.env.BASE_URL}/url/${existingLongUrl.shortUrl}`;
+      return updatedUrl;
+    } catch (err) {
+      return { error: err.message };
     }
-
-    const existingLongUrl = await this.urlRepository.findOne({ where: { longUrl } });
-    if(existingLongUrl){
-      return `http://localhost:3000/url/${existingLongUrl.shortUrl}`;
-    }
-
-    let hash = crypto.createHash('sha256').update(longUrl).digest('hex');
-    let shortUrl = hash.substring(0, 8);
-
-    let existingUrl = await this.urlRepository.findOne({ where: { shortUrl } });
-    while (existingUrl) {
-      hash = crypto.createHash('sha256').update(longUrl).digest('hex');
-      shortUrl = hash.substring(0, 8);
-      existingUrl = await this.urlRepository.findOne({ where: { shortUrl } });
-      console.log("Existing URL:", existingUrl);
-    }
-    
-    const updatedUrlData = {
-      longUrl,
-      shortUrl,
-      user: userData
-    };
-
-    const newUrlData = this.urlRepository.create(updatedUrlData);
-    await this.urlRepository.save(newUrlData);
-    const updatedUrl = `http://localhost:3000/url/${shortUrl}`;
-    return updatedUrl;
   }
 
-  async deleteExpiredUrls(): Promise<void> {
-    const expiredUrls = await this.urlRepository
-      .createQueryBuilder('UrlEntity')
-      .where('UrlEntity.createdAt < :currentDate', {
-        currentDate: new Date(Date.now()),
-      })
-      .getMany();
+  async deleteExpiredUrls(): Promise<void | { error: string }> {
+    try {
+      const expiredUrls = await this.urlRepository
+        .createQueryBuilder('UrlEntity')
+        .where('UrlEntity.createdAt < :currentDate', {
+          currentDate: new Date(Date.now()),
+        })
+        .getMany();
 
-    await this.urlRepository.remove(expiredUrls);
+      await this.urlRepository.remove(expiredUrls);
+    } catch (err) {
+      return { error: err.message };
+    }
   }
 }
