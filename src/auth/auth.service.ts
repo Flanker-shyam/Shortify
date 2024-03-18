@@ -4,8 +4,7 @@ import { Repository, QueryFailedError } from 'typeorm';
 import { AuthEntity } from './auth.entity';
 import { RegisterDto, LoginDto, LoginResponseDto } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
-import {validateData} from 'src/helpers/validate';
-
+import {validateData} from '../helpers/validate';
 @Injectable()
 export class AuthService {
   constructor(

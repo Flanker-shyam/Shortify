@@ -4,10 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UrlEntity } from '../url.entity';
 import { UrlDto } from '../dto/url-request.dto';
-import { AuthEntity } from 'src/auth/auth.entity';
-import {validateData} from 'src/helpers/validate';
-import * as dotenv from 'dotenv';
-dotenv.config();
+import { AuthEntity } from '../../auth/auth.entity'
+import {validateData} from '../../helpers/validate';
 
 @Injectable()
 export class UrlCreateService {
@@ -46,7 +44,6 @@ export class UrlCreateService {
         hash = crypto.createHash('sha256').update(longUrl).digest('hex');
         shortUrl = hash.substring(0, 8);
         existingUrl = await this.urlRepository.findOne({ where: { shortUrl } });
-        console.log('Existing URL:', existingUrl);
       }
 
       const updatedUrlData = {
@@ -57,7 +54,7 @@ export class UrlCreateService {
 
       const newUrlData = this.urlRepository.create(updatedUrlData);
       await this.urlRepository.save(newUrlData);
-      const updatedUrl = `${process.env.BASE_URL}/url/${existingLongUrl.shortUrl}`;
+      const updatedUrl = `${process.env.BASE_URL}/url/${newUrlData.shortUrl}`;
       return updatedUrl;
     } catch (err) {
       return { error: err.message };

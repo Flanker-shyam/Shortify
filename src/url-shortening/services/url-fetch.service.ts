@@ -2,7 +2,7 @@ import { Injectable , Inject,NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UrlEntity } from '../url.entity';
-import { AnalyticsEntity } from 'src/analytics/analytics.entity';
+import { AnalyticsEntity } from '../../analytics/analytics.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
@@ -35,7 +35,7 @@ export class UrlLookupService {
 
         const shortUrlData = await this.urlRepository.findOne({where:{shortUrl}})
         if(!shortUrlData){
-            return new NotFoundException('URL not found');
+            throw new NotFoundException('URL not found');
         }
 
         await this.cacheService.set(shortUrl, shortUrlData.longUrl,60);

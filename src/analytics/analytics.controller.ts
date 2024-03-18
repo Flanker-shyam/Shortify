@@ -1,7 +1,7 @@
 import {Controller,UseGuards,Get, Body} from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
-import { UrlAnalyticsDto } from 'src/url-shortening/dto/url-response.dto';
-import { AuthMiddleware } from 'src/middlewares/auth.middleware';
+import { UrlAnalyticsDto } from '../url-shortening/dto/url-response.dto';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
 
 @Controller('analytics')
 @UseGuards(AuthMiddleware)

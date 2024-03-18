@@ -11,8 +11,6 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import * as redisStore from 'cache-manager-redis-store';
 import { CacheModule } from '@nestjs/cache-manager';
-import * as dotenv from 'dotenv';
-dotenv.config();
 
 @Module({
   imports: [
