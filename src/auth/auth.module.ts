@@ -4,12 +4,14 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { AuthEntity } from "./auth.entity";
 import { JwtModule } from '@nestjs/jwt';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([AuthEntity]), // Import and provide the AuthEntity to TypeOrmModule
         JwtModule.register({
-            secret: 'flankerSecretKey', // Replace with your secret key
+            secret: process.env.JWT_SECRET, // Replace with your secret key
             signOptions: { expiresIn: '1h' }, // Token expiration (optional)
         }),
     ],

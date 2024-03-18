@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { UrlEntity } from '../url.entity';
 import { UrlDto } from '../dto/url-request.dto';
 import { AuthEntity } from 'src/auth/auth.entity';
+import {validateData} from 'src/helpers/validate';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -18,6 +19,7 @@ export class UrlCreateService {
   ) {}
 
   async shortUrl(urlData: UrlDto): Promise<string | { error: string }> {
+    await validateData(urlData, UrlDto);
     try {
       const { longUrl, userId } = urlData;
       const userData = await this.authRepository.findOne({

@@ -1,8 +1,10 @@
-import { Injectable , NotFoundException} from '@nestjs/common';
+import { Injectable , Inject,NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UrlEntity } from '../url.entity';
 import { AnalyticsEntity } from 'src/analytics/analytics.entity';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class UrlLookupService {
@@ -11,6 +13,7 @@ export class UrlLookupService {
         private urlRepository: Repository<UrlEntity>,
         @InjectRepository(AnalyticsEntity)
         private analyticsRepository: Repository<AnalyticsEntity>,
+        @Inject(CACHE_MANAGER)private cacheService:Cache
     ) {}
 
     async saveAnalytics(shortUrlData:any, userAgent:string, referralSource:string){
@@ -24,12 +27,19 @@ export class UrlLookupService {
     }
 
     async urlLookup(shortUrl: string, userAgent:string, referralSource:string):Promise<any>{
+        const cachedData = await this.cacheService.get<{ longUrl: string }>(shortUrl);
+        if(cachedData){
+            console.log("Getting data from cache");
+            return {url:cachedData}
+        }
 
         const shortUrlData = await this.urlRepository.findOne({where:{shortUrl}})
         if(!shortUrlData){
             return new NotFoundException('URL not found');
         }
-    
+
+        await this.cacheService.set(shortUrl, shortUrlData.longUrl,60);
+
         await this.saveAnalytics(shortUrlData, userAgent, referralSource);
         return {url:shortUrlData.longUrl}
     }
