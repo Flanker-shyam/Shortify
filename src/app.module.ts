@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module , MiddlewareConsumer} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -8,10 +8,18 @@ import { AuthModule } from './auth/auth.module';
 import { UrlModule } from './url-shortening/url.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AnalyticsModule } from './analytics/analytics.module';
-import { AuthMiddleware } from './middlewares/auth.middleware';
+import { LoggerMiddleware } from './middlewares/logger.middleware';
+import * as redisStore from 'cache-manager-redis-store';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
+    CacheModule.register({
+      isGlobal: true,
+      store: redisStore,
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+    }),
     AuthModule,
     AnalyticsModule,
     ScheduleModule.forRoot(),
@@ -28,4 +36,8 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule { 
+  configure(consumer: MiddlewareConsumer){
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

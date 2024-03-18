@@ -1,12 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryFailedError } from 'typeorm';
 import { AuthEntity } from './auth.entity';
 import { RegisterDto, LoginDto, LoginResponseDto } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
-import { plainToClass } from 'class-transformer';
-import { validate } from 'class-validator';
-
+import {validateData} from '../helpers/validate';
 @Injectable()
 export class AuthService {
   constructor(
@@ -17,19 +15,11 @@ export class AuthService {
 
   async generateToken(userData: LoginDto): Promise<string> {
     const payload = { username: userData.username };
-    return this.jwtService.sign(payload);
+    return this.jwtService.signAsync(payload);
   }
 
   async registerUser(userData: RegisterDto): Promise<AuthEntity | any> {
-    const userDataObject = plainToClass(RegisterDto, userData);
-    const errors = await validate(userDataObject);
-
-    if (errors.length > 0) {
-      const errorMessages = errors
-        .map((error) => Object.values(error.constraints))
-        .join('; ');
-      throw new BadRequestException(errorMessages);
-    }
+    await validateData(userData, RegisterDto);
     try {
       const newUser = this.authEntityRepository.create(userData);
       const savedUser = await this.authEntityRepository.save(newUser);
@@ -51,17 +41,8 @@ export class AuthService {
   async loginUser(
     userData: LoginDto,
   ): Promise<LoginResponseDto | string | { error: string }> {
+    await validateData(userData, LoginDto);
     try {
-      const userDataObject = plainToClass(LoginDto, userData);
-      const errors = await validate(userDataObject);
-
-      if (errors.length > 0) {
-        const errorMessages = errors
-          .map((error) => Object.values(error.constraints))
-          .join('; ');
-        throw new BadRequestException(errorMessages);
-      }
-
       const user = await this.authEntityRepository.findOne({
         where: { username: userData.username },
       });
@@ -70,10 +51,10 @@ export class AuthService {
           const token = await this.generateToken(user);
           return { user, token };
         } else {
-          return 'Password is incorrect';
+          throw new UnauthorizedException('Password is incorrect');
         }
       } else {
-        return 'User not found';
+        throw new UnauthorizedException('User not found');
       }
     } catch (err) {
       return { error: err.message };

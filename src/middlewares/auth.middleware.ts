@@ -15,9 +15,9 @@ export class AuthMiddleware implements NestMiddleware{
 
         const token = authHeader.split(' ')[1];
         try{
-            const decoded = this.jwtService.verify(token);
+            const decoded = await this.jwtService.verifyAsync(token, {secret:process.env.JWT_SECRET});
             console.log("Decoded: ",decoded);
-            const username = decoded.username;
+            const username = decoded?.username;
 
             if(username !== req.body.username){
                 return res.status(403).json({message:"Forbidden"});

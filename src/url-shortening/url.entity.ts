@@ -7,8 +7,8 @@ import {
   BeforeInsert,
   OneToMany
 } from 'typeorm';
-import { AuthEntity } from 'src/auth/auth.entity';
-import { AnalyticsEntity } from 'src/analytics/analytics.entity';
+import { AuthEntity } from '../auth/auth.entity';
+import { AnalyticsEntity } from '../analytics/analytics.entity';
 
 @Entity()
 export class UrlEntity {
@@ -22,7 +22,7 @@ export class UrlEntity {
   shortUrl: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createAt: Date;
+  createdAt: Date;
 
   @Column({ type: 'timestamp' })
   expiresAt: Date;

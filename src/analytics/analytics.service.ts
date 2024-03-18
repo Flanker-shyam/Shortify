@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UrlEntity } from 'src/url-shortening/url.entity';
-import { AuthEntity } from 'src/auth/auth.entity';
-import { UrlAnalyticsDto } from 'src/url-shortening/dto/url-response.dto';
+import { UrlEntity } from '../url-shortening/url.entity';
+import { AuthEntity } from '../auth/auth.entity';
+import { UrlAnalyticsDto } from '../url-shortening/dto/url-response.dto'
 
 @Injectable()
 export class AnalyticsService {
