@@ -1,0 +1,40 @@
+services:
+  api:
+    depends_on:
+      - redis
+      - postgres
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+    env_file:
+    - .env
+    # Run a command against the development stage of the image
+    command: sh -c "npm run start:dev"
+    ports:
+      - 3000:3000
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes:
+      - docker-nest-postgres:/var/lib/postgresql/data
+volumes:
+  redis:
+    driver: local
+  docker-nest-postgres:
