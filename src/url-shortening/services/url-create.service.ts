@@ -23,6 +23,8 @@ export class UrlCreateService {
       const userData = await this.authRepository.findOne({
         where: { username: userId },
       });
+
+      console.log('userData', userData);
       if (!userData) {
         throw new Error('User not found');
       }

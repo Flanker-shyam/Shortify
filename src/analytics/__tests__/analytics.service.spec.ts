@@ -49,7 +49,7 @@ describe('AnalyticsService', () => {
         {
           id: 1,
           longUrl: 'http://example.com',
-          shortUrl: 'abc123',
+          shortUrl: 'abc1238',
           analytics: [],
           user: mockUser,
           createdAt: new Date(),
@@ -66,7 +66,8 @@ describe('AnalyticsService', () => {
       expect(result).toEqual([
         {
           longUrl: 'http://example.com',
-          shortUrl: 'abc123',
+          shortUrl: 'abc1238',
+          numberOfClicks: 0,
           analytics: [],
         },
       ]);
