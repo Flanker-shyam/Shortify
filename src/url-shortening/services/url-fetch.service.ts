@@ -27,10 +27,13 @@ export class UrlLookupService {
     }
 
     async urlLookup(shortUrl: string, userAgent:string, referralSource:string):Promise<any>{
-        const cachedData = await this.cacheService.get<{ longUrl: string }>(shortUrl);
+        let cachedData = await this.cacheService.get<{ longUrl: string }>(shortUrl);
+
         if(cachedData){
+            let parsedCachedData = JSON.parse(JSON.stringify(cachedData));
+            this.saveAnalytics(parsedCachedData, userAgent, referralSource);
             console.log("Getting data from cache");
-            return {url:cachedData}
+            return {url:parsedCachedData.longUrl}
         }
 
         const shortUrlData = await this.urlRepository.findOne({where:{shortUrl}})
@@ -38,7 +41,7 @@ export class UrlLookupService {
             throw new NotFoundException('URL not found');
         }
 
-        await this.cacheService.set(shortUrl, shortUrlData.longUrl,60);
+        await this.cacheService.set(JSON.stringify(shortUrlData), shortUrlData.longUrl,60);
 
         await this.saveAnalytics(shortUrlData, userAgent, referralSource);
         return {url:shortUrlData.longUrl}

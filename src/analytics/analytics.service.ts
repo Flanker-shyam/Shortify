@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UrlEntity } from '../url-shortening/url.entity';
 import { AuthEntity } from '../auth/auth.entity';
 import { UrlAnalyticsDto } from '../url-shortening/dto/url-response.dto'
+import { count } from 'console';
 
 @Injectable()
 export class AnalyticsService {
@@ -21,6 +22,7 @@ export class AnalyticsService {
         throw new Error('User not found');
       }
 
+      console.log('userAnal', user);
       const userUrls = await this.urlRepository.find({
         where: { user: { id: user.id } },
         relations: ['analytics'],
@@ -29,6 +31,7 @@ export class AnalyticsService {
       const analyticsData: UrlAnalyticsDto[] = userUrls.map((url) => ({
         longUrl: url.longUrl,
         shortUrl: url.shortUrl,
+        numberOfClicks: url.analytics.length,
         analytics: url.analytics.map((analytic) => ({
           id: analytic.id,
           clickedAtTimeStamp: analytic.clickedAtTimeStamp,
