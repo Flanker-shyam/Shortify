@@ -43,7 +43,8 @@ describe('AnalyticsController', () => {
         {
           longUrl:
             'https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers',
-          shortUrl: '63f6a6fa',
+          shortUrl: '63f6a6f6',
+          numberOfClicks:1,
           analytics: [
             {
               id: 1,

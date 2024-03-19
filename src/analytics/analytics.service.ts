@@ -14,26 +14,16 @@ export class AnalyticsService {
     private authRepository: Repository<AuthEntity>,
   ) {}
 
-  isValidEmail(email: string): boolean {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  }
-
   async getAnalytics(
     username: string,
   ): Promise<UrlAnalyticsDto[] | { error: string }> {
     try {
-      username = username.toLowerCase();
-      username = username.trim();
-      if (!this.isValidEmail(username)) {
-        throw new Error(
-          'Invalid username, username should be an email address',
-        );
-      }
       const user = await this.authRepository.findOne({ where: { username } });
       if (!user) {
         throw new Error('User not found');
       }
+
+      console.log('user', user);
 
       const userUrls = await this.urlRepository.find({
         where: { user: { id: user.id } },

@@ -51,7 +51,7 @@ describe('UrlLookupService', () => {
       // Mock data and parameters
       const mockShortUrlData = {
         id: 1,
-        shortUrl: 'abc123',
+        shortUrl: 'abc1237',
         longUrl: 'http://example.com',
       };
       const mockUserAgent = 'Mock User Agent';
@@ -80,7 +80,7 @@ describe('UrlLookupService', () => {
   describe('urlLookup', () => {
     it('should return cached data if available', async () => {
       const mockCachedData = { longUrl: 'http://example.com' };
-      const mockShortUrl = 'abc123';
+      const mockShortUrl = 'abc1237';
       const mockUserAgent = 'Mock User Agent';
       const mockReferralSource = 'Mock Referral Source';
 
@@ -125,7 +125,7 @@ describe('UrlLookupService', () => {
       const mockShortUrlData = {
         id: 1,
         longUrl: 'http://example.com',
-        shortUrl: 'abc123',
+        shortUrl: 'abc1237',
         analytics: [],
         user: mockUser,
         createdAt: new Date(),
