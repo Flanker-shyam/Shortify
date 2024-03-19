@@ -22,7 +22,7 @@ export class UrlLookupService {
   ) {}
 
   isValidUsername(username: string): boolean {
-    const regex = /^[a-zA-Z0-9]{7}$/;
+    const regex = /^[a-zA-Z0-9]{0,8}$/;
     return regex.test(username);
   }
 
