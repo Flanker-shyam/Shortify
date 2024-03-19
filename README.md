@@ -201,7 +201,9 @@ The URL shortener solution provides users with the ability to shorten URLs and o
 - **Integration Tests**: Plan to add integration tests to validate the interaction between different modules and cover various use cases comprehensively.
 
 #### Future Enhancements plan to do
-- **Load Balancing and DB Sharding**: Implement advanced techniques like load balancing and database sharding to handle large volumes of requests and data more efficiently.
+- **Load Balancing and DB Sharding**:
+- LOAD BALANCING:
+  For load balancing as my application is already running in docker container, I will be using NGINX as a reverse proxy server along with Round-Robin algorithm
 
 </div>
 
