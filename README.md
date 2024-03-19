@@ -1,73 +1,162 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+<h1>Shortify</h1>
+<p><em>url shortner Application</em></p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<div>
+<strong>Overview</strong><br>
+This project aims to develop a sophisticated URL shortening service with advanced analytics capabilities. Built using Nest.js and TypeScript, the backend system ensures robustness, efficiency, and scalability to handle high traffic loads while providing detailed insights into URL usage.
+</div>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<br>
+<div>
+<strong>Technologies Used</strong><br>
+<ul>
+<li>Nest.js</li>
+<li>TypeScript</li>
+<li>PostgreSQL</li>
+<li>Redis</li>
+<li>Jest</li>
+</ul>
+</div>
 
-## Description
+<div>
+<h2>How to setup and run</h2>
+<h3>Local Setup</h3>
+<strong>Make sure you have the following installed on your system:</strong>
+<ul>
+  <li>Node</li>
+  <li>Postgres</li>
+  <li>Redis</li>
+</ul>
+<ol>
+  <li>Fork this repo</li>
+  <li>Clone this repo</li>
+  
+  ```bash
+  git clone git@github.com:Flanker-shyam/Shortify.git
+  ```
+<li>install dependencies</li>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+  ```bash
+  npm install
+  ```
+<li>Setup Environment variables: </li>
 
-## Installation
+<ul>
+  <li>Create a .env file in the root dir of this project</li>
+  <li>Copy content of example.env into this file</li>
+  <li>Change dummy values accordingly</li>
+</ul>
+
+<li>Setup Database</li>
+<ul>
+  <li>
+    Start local Postgres server<br>
+    For MacOS
+
+  ```bash
+  brew services start postgresql
+  ```
+
+For Linux
+
+ ```bash
+ sudo systemctl start postgresql
+ ```
+
+  </li>
+  <li>
+    Create Database: url_shortner/or choose any db name
+  </li>
+  <li>
+    Run DB migration to push DB schemas to the DB
+    
+  ```bash
+  npm run migration:run
+  ```
+    
+  </li>
+</ul>
+<li>Redis setup</li>
+<ul>
+ <li>
+    Start local Redis server<br>
+    For MacOS
+
+  ```bash
+  brew services start redis
+  ```
+
+For Linux
+  ```bash
+  sudo systemctl start redis
+  ```
+  </li>
+  </ul>
+  <li>Run and test</li>
+ Run this project
+ <ul>
+   <li>To run
+     
+  ```bash
+  npm run start
+  ```
+   </li>
+    <li>To run in watch mode
+     
+  ```bash
+   npm run start:dev
+  ```
+   </li>
+    <li>To run test
+     
+  ```bash
+  npm run test
+  ```
+   </li>
+ </ul>
+</ol>
+
+<h3>Docker container Setup</h3>
+<ol>
+  <li>Change following variables in .env file
 
 ```bash
-$ npm install
+DATABASE_HOST=postgres
+REDIS_HOST=redis
 ```
+</li>
 
-## Running the app
+<li>
+  Create docker container
+  
+```bash
+docker-compose up -d
+```
+This will pull redis and postgres images and containarize the whole application with it's dependencies
+</li>
+<li>
+
+Migrate database into postgres docker image:
+<ul>
+<li>
+  Execute following command and copy the name of the container
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker ps 
 ```
+</li>
 
-## Test
+<li>
+  Execute follwoing command to perfom db migration
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker exec -it "name_of_the_container" npm run migration:run
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+This will migrate DB into postgres docker image
+</li>
+</ul>
+</li>
+Setup done!!!!
+</ol>
+</div>
