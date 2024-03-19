@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UrlEntity } from '../url-shortening/url.entity';
 import { AuthEntity } from '../auth/auth.entity';
-import { UrlAnalyticsDto } from '../url-shortening/dto/url-response.dto'
-import { count } from 'console';
+import { UrlAnalyticsDto } from '../url-shortening/dto/url-response.dto';
 
 @Injectable()
 export class AnalyticsService {
@@ -15,14 +14,27 @@ export class AnalyticsService {
     private authRepository: Repository<AuthEntity>,
   ) {}
 
-  async getAnalytics(username: string): Promise<UrlAnalyticsDto[] | { error: string }> {
+  isValidEmail(email: string): boolean {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
+
+  async getAnalytics(
+    username: string,
+  ): Promise<UrlAnalyticsDto[] | { error: string }> {
     try {
+      username = username.toLowerCase();
+      username = username.trim();
+      if (!this.isValidEmail(username)) {
+        throw new Error(
+          'Invalid username, username should be an email address',
+        );
+      }
       const user = await this.authRepository.findOne({ where: { username } });
       if (!user) {
         throw new Error('User not found');
       }
 
-      console.log('userAnal', user);
       const userUrls = await this.urlRepository.find({
         where: { user: { id: user.id } },
         relations: ['analytics'],
@@ -43,7 +55,7 @@ export class AnalyticsService {
 
       return analyticsData;
     } catch (err) {
-      return { error: err.message};
+      return { error: err.message };
     }
   }
 }
