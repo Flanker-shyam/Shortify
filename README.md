@@ -160,3 +160,48 @@ This will migrate DB into postgres docker image
 Setup done!!!!
 </ol>
 </div>
+
+<div>
+  <h2>Approach of Implementation</h2>
+  ER diagram
+  <img width="560" alt="image" src="https://github.com/Flanker-shyam/Shortify/assets/85950516/94a52cd7-753c-4e40-90ad-0ae5d4737129">
+
+## Approach Documentation
+
+### URL Shortener Solution
+
+#### Overview
+The URL shortener solution provides users with the ability to shorten URLs and obtain detailed analytics for their shortened URLs. It includes authentication and authorization mechanisms for accessing analytics, employs security measures to prevent vulnerabilities, and focuses on performance and scalability.
+
+#### Functionalities
+1. **URL Shortening**: Users can pass a long URL and receive a corresponding short URL. If the long URL already exists in the database, the system returns the existing short URL; otherwise, it generates a new short URL using SHA-256 hashing and take the first 8 characters of the hash; although teh chances of collision are very rare but still here to maintain the uniqueness of shortUrl I am using while loop and every time I am checking if the shortUrl exist in the db or not.
+
+2. **Fetch URL Data**: The system checks Redis cache for the short URL mapping. If found, it redirects the user and saves analytics. If not found, it checks the database. If the URL exists in the database, it saves the mapping in Redis, redirects the user, and saves analytics. If the URL is not found in either Redis or the database, it returns a "URL not found" error.
+   
+    **Save Analytics**: This function extract info from the request header like: User-agant, referer and store it in analytics table along with other data like timeStamp.
+
+4. **Get Analytics**: Users can retrieve analytics for their URLs by providing their username. The system fetches all URLs created by the user and retrieves analytics data for each URL. The analytics include user-agent, referral source (or "Direct" if not available), timestamp, and number of clicks(number of clicks===size of analytics array).
+
+5. **Authentication and Authorization**: Users need to register and log in to access the analytics feature. Upon successful login, users receive an authentication token, which they can use to authorize access to their analytics data. This ensures that users only have access to their own URLs and associated analytics.
+
+#### Security Measures
+- **Input Validation**: Validate input data before performing database actions to prevent SQL injection attacks.
+- **CORS**: Implement Cross-Origin Resource Sharing to restrict access from unauthorized domains.
+- **Helmet**: Use Helmet middleware to set various HTTP headers for enhanced security.
+- **Rate Limiting**: Implement rate limiting to prevent abuse of the service and mitigate Denial-of-Service attacks.
+- **Authentication**: Implement secure user authentication mechanisms to ensure only authenticated users can access their analytics data.
+- **Authorization**: Authorize access to analytics data using authentication tokens to ensure users can only access their own data.
+
+#### Performance Enhancements
+- **Redis Cache**: Utilize Redis caching to improve performance by storing frequently accessed URL mappings.
+- **Docker Containerization**: Package the application and its dependencies into Docker containers for portability and efficiency.
+
+#### Testing
+- **Unit Tests**: Develop unit tests to verify the functionality of individual components and ensure code quality.
+- **Integration Tests**: Plan to add integration tests to validate the interaction between different modules and cover various use cases comprehensively.
+
+#### Future Enhancements plan to do
+- **Load Balancing and DB Sharding**: Implement advanced techniques like load balancing and database sharding to handle large volumes of requests and data more efficiently.
+
+</div>
+
