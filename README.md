@@ -3,7 +3,7 @@
 
 <div>
 <strong>Overview</strong><br>
-This project aims to develop a sophisticated URL shortening service with advanced analytics capabilities. Built using Nest.js and TypeScript, the backend system ensures robustness, efficiency, and scalability to handle high traffic loads while providing detailed insights into URL usage.
+Introducing "Shortify": a sophisticated URL shortening service built with Nest.js and TypeScript. Shortify offers advanced analytics capabilities, empowering users to track click-through rates, geographic distribution, and referral sources. With its robust backend system, Shortify ensures reliability, efficiency, and scalability, even under heavy traffic loads. Simplify your link management and gain valuable insights with Shortify.
 </div>
 
 <br>
