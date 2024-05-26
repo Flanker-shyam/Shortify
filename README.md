@@ -130,7 +130,7 @@ REDIS_HOST=redis
   Create docker container
   
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 This will pull redis and postgres images and containarize the whole application with it's dependencies
 </li>
