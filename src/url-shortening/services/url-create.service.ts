@@ -4,8 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UrlEntity } from '../url.entity';
 import { UrlDto } from '../dto/url-request.dto';
-import { AuthEntity } from '../../auth/auth.entity'
-import {validateData} from '../../helpers/validate';
+import { AuthEntity } from '../../auth/auth.entity';
+import { validateData } from '../../helpers/validate';
 
 @Injectable()
 export class UrlCreateService {

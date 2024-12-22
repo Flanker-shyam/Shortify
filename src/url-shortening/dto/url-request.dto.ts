@@ -1,4 +1,4 @@
 export class UrlDto {
-    longUrl:string;
-    userId:string;
+  longUrl: string;
+  userId: string;
 }

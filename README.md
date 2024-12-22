@@ -207,3 +207,10 @@ The URL shortener solution provides users with the ability to shorten URLs and o
 
 </div>
 
+
+
+docker run --name redis -d -p 6379:6379 redis
+
+docker run --name postgres -d -e POSTGRES_USER=flanker -e POSTGRES_PASSWORD=flanker -e POSTGRES_DB=url_shortner -p 5432:5432 postgres
+
+docker run --name nest-app -p 3000:3000 --link redis --link postgres -e POSTGRES_HOST=postgres -e POSTGRES_PORT=5432 -e POSTGRES_DB=url_shortner -e POSTGRES_USER=flanker -e POSTGRES_PASSWORD=flanker -e REDIS_HOST=redis -e REDIS_PORT=6379 flanker1916/shorty:1

@@ -5,7 +5,7 @@ import { Repository, QueryFailedError } from 'typeorm';
 import { AuthEntity } from '../auth.entity';
 import { AuthService } from '../auth.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { RegisterDto, LoginDto, LoginResponseDto } from '../auth.dto';
+import { RegisterDto } from '../auth.dto';
 
 describe('AuthService', () => {
   let authService: AuthService;

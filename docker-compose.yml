@@ -6,14 +6,12 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-      # Only will build development stage from our dockerfile
-      target: development
     volumes:
       - .:/usr/src/app
     env_file:
-    - .env
+      - .env
     # Run a command against the development stage of the image
-    command: sh -c "npm run start:dev"
+    command: sh -c "npm run migration:run; npm run start:dev"
     ports:
       - 3000:3000
   redis:
@@ -34,6 +32,7 @@ services:
       - '5432:5432'
     volumes:
       - docker-nest-postgres:/var/lib/postgresql/data
+
 volumes:
   redis:
     driver: local

@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   BeforeInsert,
-  OneToMany
+  OneToMany,
 } from 'typeorm';
 import { AuthEntity } from '../auth/auth.entity';
 import { AnalyticsEntity } from '../analytics/analytics.entity';
@@ -27,10 +27,10 @@ export class UrlEntity {
   @Column({ type: 'timestamp' })
   expiresAt: Date;
 
-  @ManyToOne(() => AuthEntity, AuthEntity=>AuthEntity.urls)
+  @ManyToOne(() => AuthEntity, (AuthEntity) => AuthEntity.urls)
   user: AuthEntity;
 
-  @OneToMany(()=> AnalyticsEntity, AnalyticsEntity=>AnalyticsEntity.url)
+  @OneToMany(() => AnalyticsEntity, (AnalyticsEntity) => AnalyticsEntity.url)
   analytics: AnalyticsEntity[];
 
   @BeforeInsert()

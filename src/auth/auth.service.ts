@@ -1,10 +1,14 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryFailedError } from 'typeorm';
 import { AuthEntity } from './auth.entity';
 import { RegisterDto, LoginDto, LoginResponseDto } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
-import {validateData} from '../helpers/validate';
+import { validateData } from '../helpers/validate';
 @Injectable()
 export class AuthService {
   constructor(

@@ -53,12 +53,12 @@ export class UrlLookupService {
       if (!this.isValidUsername) {
         throw new NotFoundException('Invalid short URL');
       }
-      let cachedData = await this.cacheService.get<{ longUrl: string }>(
+      const cachedData = await this.cacheService.get<{ longUrl: string }>(
         shortUrl,
       );
 
       if (cachedData) {
-        let parsedCachedData = JSON.parse(JSON.stringify(cachedData));
+        const parsedCachedData = JSON.parse(JSON.stringify(cachedData));
         this.saveAnalytics(parsedCachedData, userAgent, referralSource);
         console.log('Getting data from cache');
         return { url: parsedCachedData.longUrl };

@@ -32,6 +32,6 @@ export class AuthEntity {
   })
   updatedAt: Date;
 
-  @OneToMany(()=> UrlEntity, UrlEntity=>UrlEntity.user)
+  @OneToMany(() => UrlEntity, (UrlEntity) => UrlEntity.user)
   urls: UrlEntity[];
 }

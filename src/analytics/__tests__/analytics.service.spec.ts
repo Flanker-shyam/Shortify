@@ -62,7 +62,7 @@ describe('AnalyticsService', () => {
       jest.spyOn(urlRepository, 'find').mockResolvedValue(mockUrls);
 
       const result = await service.getAnalytics('testUser');
-      
+
       expect(result).toEqual([
         {
           longUrl: 'http://example.com',

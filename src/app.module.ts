@@ -1,4 +1,4 @@
-import { Module , MiddlewareConsumer} from '@nestjs/common';
+import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -26,18 +26,19 @@ import { CacheModule } from '@nestjs/cache-manager';
     UrlModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [typeorm]
+      load: [typeorm],
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => (configService.get('typeorm'))
+      useFactory: async (configService: ConfigService) =>
+        configService.get('typeorm'),
     }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { 
-  configure(consumer: MiddlewareConsumer){
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

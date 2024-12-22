@@ -62,10 +62,9 @@ describe('UrlCreateService', () => {
       getRepositoryToken(AuthEntity),
     );
   });
-  
+
   describe('shortUrl', () => {
     it('should create a short URL for a valid long URL and user ID', async () => {
-
       jest.spyOn(authRepository, 'findOne').mockResolvedValue(userData);
       jest
         .spyOn(urlRepository, 'findOne')
@@ -99,7 +98,6 @@ describe('UrlCreateService', () => {
     });
 
     it('should retry generating a new short URL if the generated short URL already exists in the database', async () => {
-  
       jest.spyOn(authRepository, 'findOne').mockResolvedValue(userData);
       jest
         .spyOn(urlRepository, 'findOne')
@@ -115,11 +113,11 @@ describe('UrlCreateService', () => {
       );
     });
 
-   it('should return error message if user not found', async()=>{
-    jest.spyOn(authRepository, 'findOne').mockResolvedValue(null);
-    const result = await urlCreateService.shortUrl(urlData);
-    expect(result).toEqual({ error: 'User not found' });
-   })
+    it('should return error message if user not found', async () => {
+      jest.spyOn(authRepository, 'findOne').mockResolvedValue(null);
+      const result = await urlCreateService.shortUrl(urlData);
+      expect(result).toEqual({ error: 'User not found' });
+    });
   });
 
   //to write test for deleteExpiredUrls function

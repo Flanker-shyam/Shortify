@@ -8,7 +8,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { UrlEntity } from '../url.entity';
 import { AnalyticsEntity } from '../../analytics/analytics.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { UrlAnalyticsDto } from '../dto/url-response.dto';
 import { UrlDto } from '../dto/url-request.dto';
 import { Request } from 'express';
 
@@ -71,7 +70,7 @@ describe('UrlController', () => {
       const request: Request = {
         headers: {
           'user-agent': 'Mock user agent',
-           referer: 'Mock referer',
+          referer: 'Mock referer',
         },
       } as Request;
       const shortUrl = 'mockShortUrl';

@@ -44,7 +44,7 @@ describe('AnalyticsController', () => {
           longUrl:
             'https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers',
           shortUrl: '63f6a6f6',
-          numberOfClicks:1,
+          numberOfClicks: 1,
           analytics: [
             {
               id: 1,
@@ -72,7 +72,7 @@ describe('AnalyticsController', () => {
         .mockResolvedValue({ error: errorMessage });
 
       const result = await controller.getAnalytics(userData);
-      
+
       expect(result).toEqual({ error: errorMessage });
     });
   });
