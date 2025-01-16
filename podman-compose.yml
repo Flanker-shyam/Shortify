@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - docker-nest-postgres:/var/lib/postgresql/data
+    container_name: postgres
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - docker-nest-redis:/data
+    container_name: redis
+    restart: always
+
+  shortify:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+    command: sh -c "npm run migration:run; npm run start:dev"
+    container_name: shortify
+    restart: always
+
+depends_on:
+  - postgres
+  - redis
+
+networks:
+  default:
+    driver: bridge
+    aliases:
+      - postgres
+      - redis
+
+volumes:
+  docker-nest-postgres:
+  docker-nest-redis:

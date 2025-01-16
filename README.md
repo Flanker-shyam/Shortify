@@ -116,6 +116,38 @@ For Linux
  </ul>
 </ol>
 
+<h3>Run using podman</h3>
+<ol>
+ <li>Install podman in your machine (follow google)</li>
+  <li>Change following variables in .env file
+
+```bash
+DATABASE_HOST=localhost
+REDIS_HOST=localhost
+```
+</li>
+
+<li>
+  start script
+  
+```bash
+./create-pod.sh 
+```
+This will pull redis and postgres images and create three containers and run the whole application inside a pod shortify_pod.
+</li>
+
+<li>
+  destroy script
+  
+```bash
+./destroy-pod.sh shortify_pod
+```
+This will destroy the pod along with all the containers running inside it.
+</li>
+
+Setup done!!!!
+</ol>
+
 <h3>Docker container Setup</h3>
 <ol>
   <li>Change following variables in .env file
@@ -134,29 +166,7 @@ docker compose up -d
 ```
 This will pull redis and postgres images and containarize the whole application with it's dependencies
 </li>
-<li>
 
-Migrate database into postgres docker image:
-<ul>
-<li>
-  Execute following command and copy the name of the container
-
-```bash
-docker ps 
-```
-</li>
-
-<li>
-  Execute follwoing command to perfom db migration
-
-```bash
-docker exec -it "name_of_the_container" npm run migration:run
-```
-
-This will migrate DB into postgres docker image
-</li>
-</ul>
-</li>
 Setup done!!!!
 </ol>
 </div>
@@ -214,3 +224,15 @@ docker run --name redis -d -p 6379:6379 redis
 docker run --name postgres -d -e POSTGRES_USER=flanker -e POSTGRES_PASSWORD=flanker -e POSTGRES_DB=url_shortner -p 5432:5432 postgres
 
 docker run --name nest-app -p 3000:3000 --link redis --link postgres -e POSTGRES_HOST=postgres -e POSTGRES_PORT=5432 -e POSTGRES_DB=url_shortner -e POSTGRES_USER=flanker -e POSTGRES_PASSWORD=flanker -e REDIS_HOST=redis -e REDIS_PORT=6379 flanker1916/shorty:1
+
+
+podman:
+
+podman pod create --name shortify_pod -p 3000:3000 -p 5432:5432 -p 6379:6379
+
+podman run --pod myfirst -e POSTGRES_USER=flanker -e POSTGRES_PASSWORD=flanker -e POSTGRES_DB=url_shortner --name postgres postgres
+
+podman run --pod myfirst --name redis redis
+
+podman run --pod myfirst --name myAPP myapp
+
