@@ -1,0 +1,32 @@
+
+> url-shortner-nest@0.0.1 migration:run
+> npm run typeorm migration:run -- -d ./src/config/typeorm.ts
+
+[1G[0K
+> url-shortner-nest@0.0.1 typeorm
+> ts-node ./node_modules/typeorm/cli migration:run -d ./src/config/typeorm.ts
+
+[1G[0K[90m[4mquery:[24m[39m [94mSELECT[39m * [94mFROM[39m [95mcurrent_schema[39m()
+[90m[4mquery:[24m[39m [94mSELECT[39m version();
+[90m[4mquery:[24m[39m [94mSELECT[39m * [94mFROM[39m "information_schema"."tables" [94mWHERE[39m "table_schema" = [37m'public'[39m [94mAND[39m "table_name" = [37m'migrations'[39m
+[90m[4mquery:[24m[39m [94mSELECT[39m * [94mFROM[39m "migrations" "migrations" [94mORDER[39m [94mBY[39m "id" [94mDESC[39m
+[4m0 migrations are already loaded in the database.[24m
+[4m2 migrations were found in the source code.[24m
+[4m2 migrations are new migrations must be executed.[24m
+[90m[4mquery:[24m[39m [94mSTART[39m TRANSACTION
+[90m[4mquery:[24m[39m [94mCREATE[39m [94mTABLE[39m "auth_entity" ("id" SERIAL [94mNOT[39m [94mNULL[39m, "name" [95mcharacter[39m [95mvarying[39m [94mNOT[39m [94mNULL[39m, "username" [95mcharacter[39m [95mvarying[39m [94mNOT[39m [94mNULL[39m, "password" [95mcharacter[39m [95mvarying[39m [94mNOT[39m [94mNULL[39m, "createAt" [95mTIMESTAMP[39m [94mNOT[39m [94mNULL[39m [94mDEFAULT[39m now(), "updateAt" [95mTIMESTAMP[39m [94mNOT[39m [94mNULL[39m [94mDEFAULT[39m now(), [94mCONSTRAINT[39m "UQ_57db63611b67e91ee24e71cfde2" [94mUNIQUE[39m ("username"), [94mCONSTRAINT[39m "PK_d3d458da474344a6982aec36b5b" [94mPRIMARY[39m KEY ("id"))
+[90m[4mquery:[24m[39m [94mCREATE[39m [94mTABLE[39m "analytics_entity" ("id" SERIAL [94mNOT[39m [94mNULL[39m, "clickedAtTimeStamp" [95mTIMESTAMP[39m [94mNOT[39m [94mNULL[39m, "userAgent" text [94mNOT[39m [94mNULL[39m, "referralSource" text [94mNOT[39m [94mNULL[39m, "createdAt" [95mTIMESTAMP[39m [94mNOT[39m [94mNULL[39m [94mDEFAULT[39m now(), "urlId" [95minteger[39m, [94mCONSTRAINT[39m "PK_8bdebe7e29915e204f0015f6094" [94mPRIMARY[39m KEY ("id"))
+[90m[4mquery:[24m[39m [94mCREATE[39m [94mTABLE[39m "url_entity" ("id" SERIAL [94mNOT[39m [94mNULL[39m, "longUrl" text [94mNOT[39m [94mNULL[39m, "shortUrl" text [94mNOT[39m [94mNULL[39m, "createAt" [95mTIMESTAMP[39m [94mNOT[39m [94mNULL[39m [94mDEFAULT[39m now(), "expiresAt" [95mTIMESTAMP[39m [94mNOT[39m [94mNULL[39m, "userId" [95minteger[39m, [94mCONSTRAINT[39m "PK_0ec3eb469ff2aed091ff9b2545e" [94mPRIMARY[39m KEY ("id"))
+[90m[4mquery:[24m[39m [94mALTER[39m [94mTABLE[39m "analytics_entity" [94mADD[39m [94mCONSTRAINT[39m "FK_62bf9eb6b0e4db3838da321b827" [94mFOREIGN[39m KEY ("urlId") [94mREFERENCES[39m "url_entity"("id") [94mON[39m [94mDELETE[39m [94mNO[39m ACTION [94mON[39m UPDATE [94mNO[39m ACTION
+[90m[4mquery:[24m[39m [94mALTER[39m [94mTABLE[39m "url_entity" [94mADD[39m [94mCONSTRAINT[39m "FK_a07f9a4be25fdb0a2a43a63d3cf" [94mFOREIGN[39m KEY ("userId") [94mREFERENCES[39m "auth_entity"("id") [94mON[39m [94mDELETE[39m [94mNO[39m ACTION [94mON[39m UPDATE [94mNO[39m ACTION
+[90m[4mquery:[24m[39m [94mINSERT[39m [94mINTO[39m "migrations"("timestamp", "name") [94mVALUES[39m ($[32m1[39m, $[32m2[39m) [90m-- PARAMETERS: [1710658342107,"Migrations1710658342107"][39m
+[4mMigration Migrations1710658342107 has been  executed successfully.[24m
+[90m[4mquery:[24m[39m [94mALTER[39m [94mTABLE[39m "url_entity" RENAME [94mCOLUMN[39m "createAt" [94mTO[39m "createdAt"
+[90m[4mquery:[24m[39m [94mALTER[39m [94mTABLE[39m "auth_entity" [94mDROP[39m [94mCOLUMN[39m "createAt"
+[90m[4mquery:[24m[39m [94mALTER[39m [94mTABLE[39m "auth_entity" [94mDROP[39m [94mCOLUMN[39m "updateAt"
+[90m[4mquery:[24m[39m [94mALTER[39m [94mTABLE[39m "auth_entity" [94mADD[39m "createdAt" [95mTIMESTAMP[39m [94mNOT[39m [94mNULL[39m [94mDEFAULT[39m now()
+[90m[4mquery:[24m[39m [94mALTER[39m [94mTABLE[39m "auth_entity" [94mADD[39m "updatedAt" [95mTIMESTAMP[39m [94mNOT[39m [94mNULL[39m [94mDEFAULT[39m now()
+[90m[4mquery:[24m[39m [94mINSERT[39m [94mINTO[39m "migrations"("timestamp", "name") [94mVALUES[39m ($[32m1[39m, $[32m2[39m) [90m-- PARAMETERS: [1710775141011,"Migrations1710775141011"][39m
+[4mMigration Migrations1710775141011 has been  executed successfully.[24m
+[90m[4mquery:[24m[39m [94mCOMMIT[39m
+[1G[0K\[1G[0K[1G[0K\[1G[0K

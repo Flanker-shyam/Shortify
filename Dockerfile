@@ -16,13 +16,8 @@ RUN npm install
 # Copy the rest of the application code and migration script
 COPY . .
 
-# Make sure the migration script is executable
-RUN chmod +x /usr/src/app/migration.sh
-
-RUN /usr/src/app/migration.sh
-
 # Expose the port your app will run on (default NestJS port is 3000)
 EXPOSE 3000
 
 # Run migrations and then start the app
-CMD npm run start:dev
+CMD sleep 15 && npm run migration:run && npm run start:dev
